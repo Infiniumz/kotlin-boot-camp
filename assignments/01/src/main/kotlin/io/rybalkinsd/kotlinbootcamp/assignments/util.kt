@@ -10,7 +10,7 @@ fun max(a: Int, b: Int) = if(a > b) a else b
 
 fun max(values: List<Int>): Int {
     var max: Int = values[0]
-    values.forEach{ max = max(max, it)}
+    values.forEach{max = max(max, it)}
     return max
 }
 
