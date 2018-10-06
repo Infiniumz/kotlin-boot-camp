@@ -17,4 +17,5 @@ class VectorTest {
     fun `equals comparison`() {
         assertTrue(Vector(100, 10) == Vector(50, 2))
     }
+    
 }
