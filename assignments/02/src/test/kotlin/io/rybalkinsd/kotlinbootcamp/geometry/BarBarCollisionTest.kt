@@ -148,6 +148,7 @@ class BarBarCollisionTest {
     fun `bar does not intersect bar 2`() {
         val bar1 = Bar(0, 0, 100, 100)
         val bar2 = Bar(150, 0, 250, 100)
+        println(bar1.isColliding(bar2))
         assertFalse(bar1.isColliding(bar2))
         assertFalse(bar2.isColliding(bar1))
     }
