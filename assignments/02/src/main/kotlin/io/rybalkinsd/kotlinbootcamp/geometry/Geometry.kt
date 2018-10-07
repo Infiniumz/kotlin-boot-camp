@@ -1,6 +1,6 @@
 package io.rybalkinsd.kotlinbootcamp.geometry
-
-import kotlin.math.*
+import kotlin.math.min
+import kotlin.math.max
 /**
  * Entity that can physically intersect, like flame and player
  */
@@ -35,25 +35,32 @@ data class Bar(var firstCornerX: Int, var firstCornerY: Int, var secondCornerX: 
     var rightx: Int = max(firstCornerX, secondCornerX)
     var righty: Int = max(firstCornerY, secondCornerY)
 
-    fun isContains(other: Point): Boolean = (other.x >= leftx) && (other.x <= rightx) &&
-            (other.y >= lefty) && (other.y <= righty)
-
-    override fun isColliding(other: Collider): Boolean {
-        if (other is Point) {
-            return isContains(other)
-        }
-        if (other is Bar) {
-            return isContains(Point(leftx, lefty)) || isContains(Point(rightx, righty)) ||
-                    isContains(Point(leftx, righty)) || isContains(Point(rightx, lefty)) || other.isColliding(this)
-        }
-        return false
+    fun isContains(other: Any): Boolean {
+            if (other is Point) {
+                return (other.x >= leftx) && (other.x <= rightx) &&
+                        (other.y >= lefty) && (other.y <= righty)
+            }
+            if (other is Bar) {
+                return isContains(Point(other.leftx, other.lefty)) || isContains(Point(other.rightx, other.righty)) ||
+                        isContains(Point(other.leftx, other.righty)) || isContains(Point(other.rightx, other.lefty))
+            }
+            return false
     }
+    override fun isColliding(other: Collider): Boolean {
+            if (other is Point) {
+                return isContains(other)
+            }
+            if (other is Bar) {
 
+                return isContains(other) || other.isContains(this)
+            }
+            return false
+    }
     override fun equals(other: Any?): Boolean {
-        if (other is Bar) {
-            return ((leftx == other.leftx) && (rightx == other.rightx) &&
-                    (lefty == other.lefty) && (righty == other.righty))
-        }
-        return false
+            if (other is Bar) {
+                return ((leftx == other.leftx) && (rightx == other.rightx) &&
+                        (lefty == other.lefty) && (righty == other.righty))
+            }
+            return false
     }
 }
