@@ -59,8 +59,8 @@ val rawProfiles = listOf(
         )
 )
 class RawProfile(val rawData: String) {
-    override fun toString() : String {
-       return this.rawData
+    override fun toString(): String {
+        return this.rawData
     }
 }
 
@@ -95,13 +95,13 @@ class LinkedInProfile(id: Long) : Profile(dataSource = DataSource.FACEBOOK, id =
 
 class VkProfile(id: Long) : Profile(dataSource = DataSource.FACEBOOK, id = id)
 
-fun ParseToSet(e: List<RawProfile>) : Set<Profile> {
+fun ParseToSet(e: List<RawProfile>): Set<Profile> {
     var st = mutableSetOf<Profile>()
     var id = mutableListOf(0L, 0L, 0L)
-    var firstName : String? = null
-    var lastName : String? = null
-    var age : Int? = null
-    var dataSourcet : String = ""
+    var firstName: String? = null
+    var lastName: String? = null
+    var age: Int? = null
+    var dataSourcet: String = ""
     e.forEach {
         val str = it.toString().replace("\n", "").split(",")
         str.forEach {
@@ -114,7 +114,7 @@ fun ParseToSet(e: List<RawProfile>) : Set<Profile> {
                 "source" -> dataSourcet = rpart
             }
             }
-        when(dataSourcet) {
+        when (dataSourcet) {
             "facebook" -> {
                 st.add(FacebookProfile(id[0]).apply {
                     this.dataSource = DataSource.FACEBOOK
@@ -145,7 +145,7 @@ fun ParseToSet(e: List<RawProfile>) : Set<Profile> {
         }.also {
             firstName = null
             lastName = null
-            age  = null
+            age = null
             dataSourcet = ""
         }
     }
@@ -160,7 +160,7 @@ var ProfileSet: Set<Profile> = ParseToSet(rawProfiles)
  * TODO
  */
 
-fun avg(e: Set<Profile>) : Map<DataSource, Double> {
+fun avg(e: Set<Profile>): Map<DataSource, Double> {
     var mp = mutableMapOf(Pair(DataSource.FACEBOOK, 0.0),
             Pair(DataSource.LINKEDIN, 0.0), Pair(DataSource.VK, 0.0))
     var lst = mutableListOf(0, 0, 0)
@@ -200,13 +200,13 @@ var avgAge = avg(ProfileSet)
  * TODO
  */
 
-fun toGroup(e: Set<Profile>) : Map<Long, List<Profile>> {
+fun toGroup(e: Set<Profile>): Map<Long, List<Profile>> {
     var mp = mutableMapOf<Long, List<Profile>>()
     var ind = 0L
     val tmp2 = e.toMutableList()
-    while(tmp2.isNotEmpty()) {
+    while (tmp2.isNotEmpty()) {
         val tmp = tmp2[0]
-        val ans = tmp2.filter{ it == tmp }
+        val ans = tmp2.filter { it == tmp }
         ans.forEach {
             mp.put(ind, ans)
         }
@@ -219,4 +219,3 @@ fun toGroup(e: Set<Profile>) : Map<Long, List<Profile>> {
 }
 
 val groupedProfiles: Map<Long, List<Profile>> = toGroup(ProfileSet)
-
