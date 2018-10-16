@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.gradle.jvm.tasks.Jar
 
 group = "io.rybalkinsd"
 version = "1.0-SNAPSHOT"
@@ -20,8 +21,16 @@ val ktlint by configurations.creating
 dependencies {
     compile(kotlin("stdlib-jdk8"))
     testCompile("junit", "junit", "4.12")
-
     ktlint("com.github.shyiko", "ktlint", "0.28.0")
+}
+
+val fatJar = task("fatJar", type = Jar::class) {
+    baseName = "${project.name}-fat"
+    manifest {
+        attributes["Main-Class"] = "MainKt"
+    }
+    from(configurations.runtime.map({ if (it.isDirectory) it else zipTree(it) }))
+    with(tasks["jar"] as CopySpec)
 }
 
 tasks {
@@ -32,7 +41,9 @@ tasks {
         classpath = ktlint
         args = listOf("src/**/*.kt")
     }
-
+    "build" {
+        dependsOn(fatJar)
+    }
     "check" {
         dependsOn(ktlint)
     }
